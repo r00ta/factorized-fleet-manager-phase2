@@ -1,6 +1,6 @@
 # factorized-fleet-manager-phase2
 
-The idea is to provide some common abstractions to build your fleet manager. One of the challenges is the management of the status: in this draft I experimented a very first abstraction. 
+The idea is to provide some common abstractions to build your fleet manager. One of the challenges is the management of the status: in this draft I experimented a very first try around this topic. 
 
 **NOTE: this is just an experiment. In order to design a good abstraction we have to take into account multiple aspects like the lifecycle of the application: this experiment just aims to give a rough idea of what we might do.**
 
@@ -9,6 +9,9 @@ The abstractions are inside the `core` module.
 The `DinosaurServiceImpl` now extends the `AbstractStatusOrchestrator` class. When a new `Dinosaur` is created, the implementation looks like 
 
 ```java
+
+public class DinosaurServiceImpl extends AbstractStatusOrchestrator<Dinosaur> implements DinosaurService {
+    ...
     @Override
     public Dinosaur createDinosaur(String customerId, DinosaurRequest dinosaurRequest) {
         if (managedEntityDAO.findByNameAndCustomerId(dinosaurRequest.getName(), customerId) != null) {
@@ -26,11 +29,14 @@ The `DinosaurServiceImpl` now extends the `AbstractStatusOrchestrator` class. Wh
         LOGGER.info("Dinosaur with id '{}' has been created for customer '{}'", dinosaur.getId(), dinosaur.getCustomerId());
         return dinosaur;
     }
+}
 ```
 
 In particular `this.accept(dinosaur);` will persist and then fire an event so that another thread will process the request asynchronously. The common implementation of `accept` is like
 
 ```java
+public abstract class AbstractStatusOrchestrator<T extends ManagedEntity> implements StatusOrchestrator<T> {
+    ...
     @Override
     public void accept(T entity) {
         LOGGER.info("Accept entity " + entity.getId());
@@ -49,11 +55,13 @@ In particular `this.accept(dinosaur);` will persist and then fire an event so th
     private void transact(T entity){
         managedEntityDAO.persist(entity);
     }
+}
 ```
 
 The event is then consumed by an implementation of `AbstractPreparingWorker`
 
 ```java
+public abstract class AbstractPreparingWorker<T extends ManagedEntity> {
     // To be annotated by the user, since @ConsumeEvents creates the bean automatically!
     public void consumeAccepted(T entity) {
         LOGGER.info("Consuming event for entity " + entity.getId());
@@ -64,6 +72,7 @@ The event is then consumed by an implementation of `AbstractPreparingWorker`
         entity.setDesiredStatus(ManagedEntityStatus.PROVISIONING);
         managedEntityDAO.getEntityManager().merge(entity);
     }
+}
 ```
 
 
@@ -92,7 +101,6 @@ and
  * This class represents all the exceptions that are caused by the user interaction. For example the user asks for a resource
  * that does not exist, the user sends a wrong configuration etc.
  * <p>
- * All the subclasses have to be included in the /resources/exceptionInfo.json because they are directly visible on the catalog.
  */
 public class ExternalUserException extends RuntimeException {
 
