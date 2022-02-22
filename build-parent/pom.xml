@@ -1,0 +1,352 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>factorized-fleet-manager</artifactId>
+    <groupId>com.r00ta.ffm</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>pom</packaging>
+
+  <artifactId>build-parent</artifactId>
+  <name>Factorized Fleet Manager :: Build Parent</name>
+  <description>Factorized Fleet Manager Dependency Management Project BOM</description>
+
+  <properties>
+
+    <maven.compiler.release>11</maven.compiler.release>
+    <version.maven>3.6.2</version.maven>
+    <version.jdk>11</version.jdk>
+
+    <compiler-plugin.version>3.8.1</compiler-plugin.version>
+    <version.dependency.plugin>2.8</version.dependency.plugin>
+    <maven.compiler.parameters>true</maven.compiler.parameters>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+    <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+    <quarkus.platform.version>2.7.0.Final</quarkus.platform.version>
+    <quarkus-amazon-services.version>1.0.3</quarkus-amazon-services.version>
+    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+    <version.compiler.plugin>3.8.1</version.compiler.plugin>
+    <version.surefire.plugin>2.22.2</version.surefire.plugin> <!-- minimum required by JUnit 5 -->
+    <version.install.plugin>2.5.2</version.install.plugin>
+    <kogito.formatter.version>1.11.0.Final</kogito.formatter.version>
+    <formatter.plugin.version>2.13.0</formatter.plugin.version>
+    <impsort.plugin.version>1.5.0</impsort.plugin.version>
+    <version.enforcer.plugin>3.0.0</version.enforcer.plugin>
+    <restrict-imports.plugin.version>1.4.0</restrict-imports.plugin.version>
+
+    <version.io.cloudevents>2.2.0</version.io.cloudevents>
+    <version.org.testcontainer>1.16.0</version.org.testcontainer>
+    <version.com.github.tomakehurst.wiremock>2.30.1</version.com.github.tomakehurst.wiremock>
+    <version.org.awaitility>4.1.0</version.org.awaitility>
+    <version.io.fabric8>5.10.1</version.io.fabric8>
+    <version.org.kie.dmn.feel>7.57.0.Final</version.org.kie.dmn.feel>
+    <version.org.localstack>0.13.3</version.org.localstack>
+    <version.org.keycloak>15.1.0</version.org.keycloak>
+    <version.io.quarkiverse.hibernatetypes>0.2.0</version.io.quarkiverse.hibernatetypes>
+    <version.io.quarkiverse.operatorsdk>3.0.2</version.io.quarkiverse.operatorsdk>
+    <version.io.github.classgraph>4.8.129</version.io.github.classgraph>
+
+    <version.io.cucumber>7.0.0</version.io.cucumber>
+
+    <container.image.localstack>localstack/localstack:${version.org.localstack}</container.image.localstack>
+    <container.image.keycloak>quay.io/keycloak/keycloak:${version.org.keycloak}</container.image.keycloak>
+
+    <formatter.skip>false</formatter.skip>
+    <formatter.goal>format</formatter.goal>
+    <impsort.goal>sort</impsort.goal>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>${quarkus.platform.group-id}</groupId>
+        <artifactId>${quarkus.platform.artifact-id}</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkiverse.amazonservices</groupId>
+        <artifactId>quarkus-amazon-services-bom</artifactId>
+        <version>${quarkus-amazon-services.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.quarkiverse.hibernatetypes</groupId>
+        <artifactId>quarkus-hibernate-types</artifactId>
+        <version>${version.io.quarkiverse.hibernatetypes}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkiverse.operatorsdk</groupId>
+        <artifactId>quarkus-operator-sdk</artifactId>
+        <version>${version.io.quarkiverse.operatorsdk}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkiverse.operatorsdk</groupId>
+        <artifactId>quarkus-operator-sdk-csv-generator</artifactId>
+        <version>${version.io.quarkiverse.operatorsdk}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers</artifactId>
+        <version>${version.org.testcontainer}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>kafka</artifactId>
+        <version>${version.org.testcontainer}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock-jre8</artifactId>
+        <version>${version.com.github.tomakehurst.wiremock}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>${version.org.awaitility}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.github.classgraph</groupId>
+        <artifactId>classgraph</artifactId>
+        <version>${version.io.github.classgraph}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>${quarkus.platform.group-id}</groupId>
+          <artifactId>quarkus-maven-plugin</artifactId>
+          <version>${quarkus.platform.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>io.quarkus</groupId>
+          <artifactId>quarkus-maven-plugin</artifactId>
+          <version>${quarkus.platform.version}</version>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${version.compiler.plugin}</version>
+          <configuration>
+            <showDeprecation>true</showDeprecation>
+            <showWarnings>true</showWarnings>
+            <release>${maven.compiler.release}</release>
+            <compilerArgs>
+              <arg>-Xlint:unchecked</arg>
+            </compilerArgs>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>${version.install.plugin}</version>
+          <executions>
+            <execution>
+              <id>default-install</id>
+              <phase>install</phase>
+              <goals>
+                <goal>install</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>${version.dependency.plugin}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${version.surefire.plugin}</version>
+          <configuration>
+            <argLine>-Xmx1024m -Dfile.encoding=UTF-8</argLine>
+            <systemPropertyVariables>
+              <apple.awt.UIElement>true</apple.awt.UIElement>
+              <org.uberfire.nio.git.daemon.enabled>false</org.uberfire.nio.git.daemon.enabled>
+              <org.uberfire.nio.git.ssh.enabled>false</org.uberfire.nio.git.ssh.enabled>
+              <org.uberfire.sys.repo.monitor.disabled>true</org.uberfire.sys.repo.monitor.disabled>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${version.surefire.plugin}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${version.enforcer.plugin}</version>
+          <dependencies>
+            <dependency>
+              <groupId>de.skuzzle.enforcer</groupId>
+              <artifactId>restrict-imports-enforcer-rule</artifactId>
+              <version>${restrict-imports.plugin.version}</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>enforce-versions</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <requireMavenVersion>
+                    <version>${version.maven}</version>
+                  </requireMavenVersion>
+                  <requireJavaVersion>
+                    <version>${version.jdk}</version>
+                  </requireJavaVersion>
+                </rules>
+                <fail>true</fail>
+              </configuration>
+            </execution>
+            <execution>
+              <id>check-assert-imports</id>
+              <phase>process-sources</phase>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <RestrictImports>
+                    <includeTestCode>true</includeTestCode>
+                    <reason>Use AssertJ for Assertions instead of JUnit</reason>
+                    <bannedImports>
+                      <bannedImport>static org.junit.jupiter.api.Assertions.*</bannedImport>
+                      <bannedImport>org.junit.jupiter.api.Assertions</bannedImport>
+                      <bannedImport>static org.junit.Assert.*</bannedImport>
+                      <bannedImport>org.junit.Assert</bannedImport>
+                    </bannedImports>
+                  </RestrictImports>
+                  <RestrictImports>
+                    <includeTestCode>true</includeTestCode>
+                    <reason>Use AssertJ for Assertions instead of Hamcrest</reason>
+                    <bannedImports>
+                      <bannedImport>static org.hamcrest.MatcherAssert.*</bannedImport>
+                      <bannedImport>org.hamcrest.MatcherAssert</bannedImport>
+                    </bannedImports>
+                  </RestrictImports>
+                </rules>
+                <fail>true</fail>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>net.revelc.code.formatter</groupId>
+          <artifactId>formatter-maven-plugin</artifactId>
+          <version>${formatter.plugin.version}</version>
+          <dependencies>
+            <dependency>
+              <artifactId>kogito-ide-config</artifactId>
+              <groupId>org.kie.kogito</groupId>
+              <version>${kogito.formatter.version}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <configFile>eclipse-format.xml</configFile>
+            <lineEnding>LF</lineEnding>
+            <skip>${formatter.skip}</skip>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>${formatter.goal}</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>net.revelc.code</groupId>
+          <artifactId>impsort-maven-plugin</artifactId>
+          <version>${impsort.plugin.version}</version>
+          <configuration>
+            <!-- keep in sync with kogito-ide-config/src/main/resources/eclipse.importorder -->
+            <groups>java.,javax.,org.,com.,io.</groups>
+            <staticGroups>*</staticGroups>
+            <staticAfter>true</staticAfter>
+            <!-- keep in sync with the formatter-maven-plugin -->
+            <skip>${formatter.skip}</skip>
+            <removeUnused>true</removeUnused>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>${impsort.goal}</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>net.revelc.code.formatter</groupId>
+        <artifactId>formatter-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>net.revelc.code</groupId>
+        <artifactId>impsort-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <!-- Fail the build if code does not follow the standards. -->
+      <id>validate-formatting</id>
+      <activation>
+        <property>
+          <name>validate-formatting</name>
+        </property>
+      </activation>
+      <properties>
+        <formatter.skip>false</formatter.skip>
+        <formatter.goal>validate</formatter.goal>
+        <impsort.goal>check</impsort.goal>
+      </properties>
+    </profile>
+    <profile>
+      <id>quickly</id>
+      <activation>
+        <property>
+          <name>quickly</name>
+        </property>
+      </activation>
+      <properties>
+        <formatter.skip>true</formatter.skip>
+        <skipITs>true</skipITs>
+        <skipTests>true</skipTests>
+      </properties>
+    </profile>
+  </profiles>
+</project>
